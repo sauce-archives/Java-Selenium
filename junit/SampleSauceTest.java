@@ -1,18 +1,18 @@
 @RunWith(ConcurrentParameterized.class)
 public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
- 
+
     /**
      * Constructs a {@link SauceOnDemandAuthentication} instance using the supplied user name/access key.  To use the authentication
      * supplied by environment variables or from an external file, use the no-arg {@link SauceOnDemandAuthentication} constructor.
      */
-    public SauceOnDemandAuthentication authentication = new SauceOnDemandAuthentication("${userName}", "${accessKey}");
- 
+    public SauceOnDemandAuthentication authentication = new SauceOnDemandAuthentication("YOUR_USERNAME", "YOUR_ACCESS_KEY");
+
     /**
      * JUnit Rule which will mark the Sauce Job as passed/failed when the test succeeds or fails.
      */
     @Rule
     public SauceOnDemandTestWatcher resultReportingTestWatcher = new SauceOnDemandTestWatcher(this, authentication);
- 
+
     /**
      * Represents the browser to be used as part of the test run.
      */
@@ -29,12 +29,12 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
      * Instance variable which contains the Sauce Job Id.
      */
     private String sessionId;
- 
+
     /**
      * The {@link WebDriver} instance which is used to perform browser interactions with.
      */
     private WebDriver driver;
- 
+
     /**
      * Constructs a new instance of the test.  The constructor requires three string parameters, which represent the operating
      * system, version and browser to be used when launching a Sauce VM.  The order of the parameters should be the same
@@ -49,7 +49,7 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
         this.version = version;
         this.browser = browser;
     }
- 
+
     /**
      * @return a LinkedList containing String arrays representing the browser combinations the test should be run against. The values
      * in the String array are used as part of the invocation of the test constructor
@@ -61,8 +61,8 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
         browsers.add(new String[]{"OSX 10.8", "6", "safari"});
         return browsers;
     }
- 
- 
+
+
     /**
      * Constructs a new {@link RemoteWebDriver} instance which is configured to use the capabilities defined by the {@link #browser},
      * {@link #version} and {@link #os} instance variables, and which is configured to run against ondemand.saucelabs.com, using
@@ -72,7 +72,7 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
      */
     @Before
     public void setUp() throws Exception {
- 
+
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
         if (version != null) {
@@ -84,9 +84,9 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
                 new URL("http://" + authentication.getUsername() + ":" + authentication.getAccessKey() + "@ondemand.saucelabs.com:80/wd/hub"),
                 capabilities);
         this.sessionId = (((RemoteWebDriver) driver).getSessionId()).toString();
- 
+
     }
- 
+
     /**
      * Runs a simple test verifying the title of the amazon.com homepage.
      * @throws Exception
@@ -96,7 +96,7 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
         driver.get("http://www.amazon.com/");
         assertEquals("Amazon.com: Online Shopping for Electronics, Apparel, Computers, Books, DVDs & more", driver.getTitle());
     }
- 
+
     /**
      * Closes the {@link WebDriver} session.
      *
@@ -106,7 +106,7 @@ public class SampleSauceTest implements SauceOnDemandSessionIdProvider {
     public void tearDown() throws Exception {
         driver.quit();
     }
- 
+
     /**
      *
      * @return the value of the Sauce Job id.
